@@ -1,22 +1,21 @@
-const albumUrl = "https://www.googleapis.com/books/v1/volumes?q=vacanza";
-const { from, of } = rxjs;
-const { map, tap, switchMap } = rxjs.operators;
-
-const p = fetch(albumUrl).then( res1 => res1.json());
-p.then(res => console.log(res, typeof res));
-
-const objs = from(p);
-objs.pipe(
-    map( res => res.items ),
-    switchMap( (items) => of(...items) ),
-    map( (item) => item.volumeInfo ),
-    map( item => {
-        const obj = {
-            title: item.title,
-            description: item.description,
-            authors: item.authors ? item.authors.join(',') : '',
-            thumbnail: item.imageLinks.smallThumbnail,
-        };
-        return obj;
-    })
-).subscribe( displayBooks );
+"use strict";
+exports.__esModule = true;
+var albumUrl = "https://www.googleapis.com/books/v1/volumes?q=angular";
+var function_1 = require("./function");
+var rxjs_1 = require("rxjs");
+var operators_1 = require("rxjs/operators");
+// il comando JS Fecth restituisce una Promise
+var p = fetch(albumUrl).then(function (res1) {
+    return res1.json();
+});
+//il comando FROM è corrispondente al vecchio "fromPromise" di RxJS 5
+var objs = rxjs_1.from(p);
+objs.pipe(operators_1.map(function (res) { return res.items; }), operators_1.switchMap(function (items) { return rxjs_1.of.apply(void 0, items); }), operators_1.map(function (item) { return item.volumeInfo; }), operators_1.map(function (item) {
+    var obj = {
+        title: item.title,
+        description: item.description || 'Descrizione non presente',
+        authors: item.authors ? item.authors.join(',') : '',
+        thumbnail: item.imageLinks.smallThumbnail
+    };
+    return obj;
+})).subscribe(function_1.displayBooks);
